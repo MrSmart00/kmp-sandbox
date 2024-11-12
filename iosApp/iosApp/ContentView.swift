@@ -3,18 +3,25 @@ import shared
 
 struct ContentView: View {
 	let greet = Greeting().greet()
-	@State var text = ""
+	@State var articles: [Article] = []
 
 	var body: some View {
-	    VStack {
-            Text(greet)
-            Text(text)
+        VStack {
+            ForEach(articles, id: \.self) { article in
+                VStack(alignment: .leading) {
+                    Text(article.title)
+                    HStack {
+                        Spacer()
+                        Text(article.date)
+                    }
+                }
+            }
 	    }
 	    .task {
 	        do {
-	            text = try await StubFeedReader().feeds()
+                articles = try await StubFeedReader().feeds()
 	        } catch {
-	            text = "Failed feed loading"
+	            print("Failed feed loading")
 	        }
 	    }
 	}
