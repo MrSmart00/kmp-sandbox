@@ -3,9 +3,20 @@ import shared
 
 struct ContentView: View {
 	let greet = Greeting().greet()
+	@State var text = ""
 
 	var body: some View {
-		Text(greet)
+	    VStack {
+            Text(greet)
+            Text(text)
+	    }
+	    .task {
+	        do {
+	            text = try await StubFeedReader().feeds()
+	        } catch {
+	            text = "Failed feed loading"
+	        }
+	    }
 	}
 }
 
